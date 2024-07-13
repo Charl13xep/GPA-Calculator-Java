@@ -94,65 +94,70 @@ public class LoginPage extends JPanel {
         formGbc.gridwidth = 2;
         formPanel.add(titleLabel, formGbc);
 
-        // admissionNumber Label
-        JLabel admissionNumberLabel = new JLabel("admissionNumber:");
+        // Admission Number Label
+        JLabel admissionNumberLabel = new JLabel("Admission Number:");
         formGbc.gridx = 0;
         formGbc.gridy = 1;
-        formGbc.gridwidth = 1; // Reset to one column
+        formGbc.gridwidth = 2; // Label spans both columns
         formPanel.add(admissionNumberLabel, formGbc);
 
-        // admissionNumber Field
+        // Admission Number Field (move to next row)
         admissionNumberField = new JTextField(20);
-        formGbc.gridx = 1;
-        formGbc.gridy = 1;
-        formGbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontal space
+        formGbc.gridx = 0; // Start in the first column
+        formGbc.gridy = 2; // Move to the next row
+        formGbc.gridwidth = 2; // Span both columns
+        formGbc.fill = GridBagConstraints.HORIZONTAL;
         formPanel.add(admissionNumberField, formGbc);
 
         // Password Label
         JLabel passwordLabel = new JLabel("Password:");
         formGbc.gridx = 0;
-        formGbc.gridy = 2;
-        formGbc.fill = GridBagConstraints.NONE; // Reset fill
+        formGbc.gridy = 3; // Move to the next row
+        formGbc.gridwidth = 2; // Label spans both columns
+        formGbc.fill = GridBagConstraints.NONE;
         formPanel.add(passwordLabel, formGbc);
 
-        // Password Field
+        // Password Field (move to next row)
         passwordField = new JPasswordField(20);
-        formGbc.gridx = 1;
-        formGbc.gridy = 2;
+        formGbc.gridx = 0; // Start in the first column
+        formGbc.gridy = 4; // Move to the next row
+        formGbc.gridwidth = 2; // Span both columns
         formGbc.fill = GridBagConstraints.HORIZONTAL;
         formPanel.add(passwordField, formGbc);
 
-        // Error Label
+        // Button Panel (to hold both buttons side by side)
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        formGbc.gridx = 0;
+        formGbc.gridy = 5;
+        formGbc.gridwidth = 2;
+        formPanel.add(buttonPanel, formGbc);
+
+        // Login Button
+        loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(100, 30));
+        loginButton.addActionListener(e -> attemptLogin());
+        buttonPanel.add(loginButton);
+
+        // Register Button
+        registerButton = new JButton("Register");
+        registerButton.setPreferredSize(new Dimension(100, 30));
+        registerButton.addActionListener(e -> {
+            // Code to switch to the registration page here
+            // For example:
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(LoginPage.this);
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(new RegistrationPage());
+            frame.revalidate();
+            frame.repaint();
+        });
+        buttonPanel.add(registerButton);
+
+        // Error Label (below the buttons)
         errorLabel = new JLabel();
         errorLabel.setForeground(Color.RED);
-        formGbc.gridx = 0;
-        formGbc.gridy = 3; // Moved to row 3
-        formGbc.gridwidth = 2;
+        formGbc.gridy = 6;
         formPanel.add(errorLabel, formGbc);
 
-        // Login Button (Smaller and Aligned)
-        loginButton = new JButton("Login");
-        loginButton.setPreferredSize(new Dimension(100, 30)); // Adjust size as needed
-        loginButton.addActionListener(e -> attemptLogin());
-        formGbc.gridx = 0;
-        formGbc.gridy = 4; // Moved to row 4
-        formGbc.gridwidth = 2;
-        formGbc.fill = GridBagConstraints.NONE; // Don't fill horizontal space
-        formGbc.anchor = GridBagConstraints.CENTER; // Center the button
-        formPanel.add(loginButton, formGbc);
-
-        try {
-            BufferedImage image = ImageIO.read(
-                    new File("C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\640074.png"));
-            JLabel imageLabel = new JLabel(new ImageIcon(image));
-            gbc.gridx = 0; // Adjust the position as needed
-            gbc.gridy = 0;
-            gbc.gridwidth = 2; // Span two columns if needed
-            add(imageLabel, gbc);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the case where the image cannot be loaded
-        }
     }
 
     private void attemptLogin() {
