@@ -11,6 +11,7 @@ public class LoginPage extends JPanel {
     private JTextField admissionNumberField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private JButton registerButton;
     private JLabel errorLabel;
     private final String link = "jdbc:mysql://localhost:3306/oop";
     private final String dUname = "root";
@@ -144,11 +145,11 @@ public class LoginPage extends JPanel {
         registerButton.addActionListener(e -> {
             // Code to switch to the registration page here
             // For example:
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(LoginPage.this);
-            frame.getContentPane().removeAll();
-            frame.getContentPane().add(new RegistrationPage());
-            frame.revalidate();
-            frame.repaint();
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(LoginPage.this);
+            parentFrame.getContentPane().removeAll();
+            parentFrame.getContentPane().add(new RegistrationPage());
+            parentFrame.revalidate();
+            parentFrame.repaint();
         });
         buttonPanel.add(registerButton);
 
