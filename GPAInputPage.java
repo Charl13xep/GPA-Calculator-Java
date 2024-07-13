@@ -7,15 +7,21 @@ import java.util.List;
 public class GPAInputPage extends JPanel {
 
     // ... (same fields as before)
+    private String[] subjectOptions = {
+            "Mathematics", "English", "Physics", "Chemistry", "Biology",
+            "History", "Geography", "Computer Science", "Art", "Music",
+            "Physical Education", "Business Studies", "Foreign Language", "Other" };
 
     private JPanel inputPanel; // Now a class member
     private JButton addSubjectButton, calculateButton;
-    private List<JTextField> subjectFields = new ArrayList<>();
+
     private List<JComboBox<String>> gradeFields = new ArrayList<>();
+    private List<JComboBox<String>> subjectFields = new ArrayList<>();
     private List<JTextField> creditHoursFields = new ArrayList<>(); // Optional
     private GridBagConstraints gbc = new GridBagConstraints();
 
     public GPAInputPage() {
+
         setLayout(new BorderLayout(20, 20));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -47,8 +53,9 @@ public class GPAInputPage extends JPanel {
     }
 
     private void addSubjectRow() {
-        JTextField subjectField = new JTextField(20); // Set preferred column width
-        String[] gradeOptions = { "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F" };
+        JComboBox<String> subjectField = new JComboBox<>(subjectOptions);
+        // JTextField subjectField = new JTextField(20); // Set preferred column width
+        String[] gradeOptions = { "A", "B", "C", "D", "F" };
         JComboBox<String> gradeField = new JComboBox<>(gradeOptions);
         JTextField creditHoursField = new JTextField(5); // Set preferred column width for credit hours
 

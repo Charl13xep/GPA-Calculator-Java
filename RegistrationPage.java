@@ -72,6 +72,24 @@ public class RegistrationPage extends JPanel {
         String password = new String(passwordField.getPassword());
         String institution = institutionField.getText();
 
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:your_database.db")) {
+            String query = "SELECT COUNT(*) FROM users WHERE admission_number = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, admissionNumber);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    rs.next(); // Move to the first (and only) row of the result set
+                    int count = rs.getInt(1);
+                    if (count > 0) {
+                        errorLabel.setText("User with this admission number already exists.");
+                        return; // Don't proceed with registration
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database error
+        }
+
         // Input Validation
         if (name.isEmpty() || email.isEmpty() || admissionNumber.isEmpty() || password.isEmpty()
                 || institution.isEmpty()) {
