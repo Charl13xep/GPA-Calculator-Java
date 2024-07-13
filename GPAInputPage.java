@@ -2,7 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GPAInputPage extends JPanel {
 
@@ -24,6 +26,15 @@ public class GPAInputPage extends JPanel {
     private static String admissionNumber;
 
     public GPAInputPage(String admissionNumber) {
+        JFrame frame = new JFrame("GPA Calculator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(this);
+
+        // Set preferred size for a wider window
+        frame.setPreferredSize(new Dimension(600, 400));
+        frame.pack();
+        frame.setLocationRelativeTo(null); // Center the window
+        frame.setVisible(true);
         this.admissionNumber = admissionNumber;
 
         setLayout(new BorderLayout(20, 20));
@@ -51,6 +62,8 @@ public class GPAInputPage extends JPanel {
         buttonPanel.add(addSubjectButton);
         buttonPanel.add(calculateButton);
         add(buttonPanel, BorderLayout.SOUTH);
+
+        calculateButton.addActionListener(e -> calculateGPA());
 
         // Initial subject row
         addSubjectRow();
@@ -90,17 +103,50 @@ public class GPAInputPage extends JPanel {
         revalidate();
     }
 
+    private void calculateGPA() {
+        Map<String, Double> gradePoints = new HashMap<>();
+        gradePoints.put("A", 4.0);
+        gradePoints.put("B", 3.0);
+        gradePoints.put("C", 2.0);
+        gradePoints.put("D", 1.0);
+        gradePoints.put("F", 0.0);
+
+        double totalWeightedGradePoints = 0;
+        int totalCreditHours = 0;
+
+        for (int i = 0; i < subjectFields.size(); i++) {
+            String subject = (String) subjectFields.get(i).getSelectedItem();
+            String grade = (String) gradeFields.get(i).getSelectedItem();
+            int creditHours;
+            try {
+                creditHours = Integer.parseInt(creditHoursFields.get(i).getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid credit hours for " + subject);
+                return;
+            }
+
+            if (gradePoints.containsKey(grade)) {
+                totalWeightedGradePoints += gradePoints.get(grade) * creditHours;
+                totalCreditHours += creditHours;
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid grade entered for " + subject);
+                return;
+            }
+        }
+
+        if (totalCreditHours == 0) {
+            JOptionPane.showMessageDialog(this, "Please enter credit hours for at least one subject.");
+            return;
+        }
+
+        double gpa = totalWeightedGradePoints / totalCreditHours;
+        JOptionPane.showMessageDialog(this, String.format("Your GPA is: %.2f", gpa));
+    }
+
     // ... (Methods to get data from fields and validate input)
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("GPA Calculator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new GPAInputPage(admissionNumber));
+        GPAInputPage inputPage = new GPAInputPage(admissionNumber);
 
-        // Set preferred size for a wider window
-        frame.setPreferredSize(new Dimension(600, 400));
-        frame.pack();
-        frame.setLocationRelativeTo(null); // Center the window
-        frame.setVisible(true);
     }
 }

@@ -6,10 +6,13 @@ import java.sql.*;
 import java.util.regex.Pattern;
 
 public class RegistrationPage extends JPanel {
-    private JTextField nameField, emailField, admissionNumberField, institutionField;
+    private JTextField nameField, emailField, admissionNumberField, facultyField;
     private JPasswordField passwordField;
     private JButton registerButton;
     private JLabel errorLabel;
+    private final String link = "jdbc:mysql://localhost:3306/oop";
+    private final String dUname = "root";
+    private final String dPass = "693369";
 
     public RegistrationPage() {
         setLayout(new GridBagLayout());
@@ -31,7 +34,7 @@ public class RegistrationPage extends JPanel {
         createInputRow("Email:", emailField = new JTextField(20), 2);
         createInputRow("Admission Number:", admissionNumberField = new JTextField(20), 3);
         createInputRow("Password:", passwordField = new JPasswordField(20), 4);
-        createInputRow("Institution:", institutionField = new JTextField(20), 5);
+        createInputRow("Faculty:", facultyField = new JTextField(20), 5);
 
         // Error Label
         errorLabel = new JLabel();
@@ -70,9 +73,9 @@ public class RegistrationPage extends JPanel {
         String email = emailField.getText();
         String admissionNumber = admissionNumberField.getText();
         String password = new String(passwordField.getPassword());
-        String institution = institutionField.getText();
+        String faculty = facultyField.getText();
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:your_database.db")) {
+        try (Connection conn = DriverManager.getConnection(link, dUname, dPass)) {
             String query = "SELECT COUNT(*) FROM users WHERE admission_number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, admissionNumber);
@@ -92,7 +95,7 @@ public class RegistrationPage extends JPanel {
 
         // Input Validation
         if (name.isEmpty() || email.isEmpty() || admissionNumber.isEmpty() || password.isEmpty()
-                || institution.isEmpty()) {
+                || faculty.isEmpty()) {
             errorLabel.setText("All fields are required.");
         } else if (!isValidEmail(email)) {
             errorLabel.setText("Invalid email format.");
@@ -100,19 +103,20 @@ public class RegistrationPage extends JPanel {
             errorLabel.setText("Password must be at least 8 characters long and contain letters and numbers.");
         } else {
 
-            try (Connection conn = DriverManager.getConnection("jdbc:sqlite:your_database.db")) {
-                String query = "INSERT INTO users (name, email, admissionNumber, password, institution) VALUES (?, ?, ?, ?, ?)";
+            try (Connection conn = DriverManager.getConnection(link, dUname, dPass)) {
+                String query = "INSERT INTO users (name1, email, admission_number, password1, faculty) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, name);
                     pstmt.setString(2, email);
                     pstmt.setString(3, admissionNumber);
                     pstmt.setString(4, password); // Store password in plain text (NOT RECOMMENDED)
-                    pstmt.setString(5, institution);
+                    pstmt.setString(5, faculty);
                     pstmt.executeUpdate();
 
                     // Registration successful
                     JOptionPane.showMessageDialog(this, "Registration successful!");
-                    // ... (Go back to login page or another action)
+                    SwingUtilities.getWindowAncestor(this).dispose();
+                    new LoginPage();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

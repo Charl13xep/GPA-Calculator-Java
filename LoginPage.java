@@ -12,8 +12,18 @@ public class LoginPage extends JPanel {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JLabel errorLabel;
+    private final String link = "jdbc:mysql://localhost:3306/oop";
+    private final String dUname = "root";
+    private final String dPass = "693369";
 
     public LoginPage() {
+        JFrame frame = new JFrame("Login");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(this);
+        frame.setPreferredSize(new Dimension(600, 400));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -149,15 +159,18 @@ public class LoginPage extends JPanel {
         String admissionNumber = admissionNumberField.getText();
         String password = new String(passwordField.getPassword()); // Get password (plain text)
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:your_database.db")) {
-            String query = "SELECT password FROM users WHERE admissionNumber = ?";
+        try (Connection conn = DriverManager.getConnection(link, dUname, dPass)) {
+            String query = "SELECT password1 FROM users WHERE admission_number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, admissionNumber);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        String storedPassword = rs.getString("password");
+                        String storedPassword = rs.getString("password1");
                         if (password.equals(storedPassword)) {
                             // Successful login (passwords match)
+                            SwingUtilities.getWindowAncestor(this).dispose();
+                            new GPAInputPage(admissionNumber);
+
                             // Open GPAInputPage or another window
                             // ...
                         } else {
@@ -175,12 +188,7 @@ public class LoginPage extends JPanel {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Login");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new LoginPage());
-        frame.setPreferredSize(new Dimension(600, 400));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        LoginPage loginPage = new LoginPage();
+
     }
 }
