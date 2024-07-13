@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class LoginPage extends JPanel {
-    private JTextField usernameField;
+    private JTextField admissionNumberField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JLabel errorLabel;
@@ -21,16 +21,16 @@ public class LoginPage extends JPanel {
         gbc.gridwidth = 2; // Span two columns
         add(titleLabel, gbc);
 
-        JLabel usernameLabel = new JLabel("Username:");
+        JLabel admissionNumberLabel = new JLabel("admissionNumber:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        add(usernameLabel, gbc);
+        add(admissionNumberLabel, gbc);
 
-        usernameField = new JTextField(20);
+        admissionNumberField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        add(usernameField, gbc);
+        add(admissionNumberField, gbc);
 
         JLabel passwordLabel = new JLabel("Password:");
         gbc.gridx = 0;
@@ -59,13 +59,13 @@ public class LoginPage extends JPanel {
     }
 
     private void attemptLogin() {
-        String username = usernameField.getText();
+        String admissionNumber = admissionNumberField.getText();
         String password = new String(passwordField.getPassword()); // Get password (plain text)
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:your_database.db")) {
-            String query = "SELECT password FROM users WHERE username = ?";
+            String query = "SELECT password FROM users WHERE admissionNumber = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                pstmt.setString(1, username);
+                pstmt.setString(1, admissionNumber);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
                         String storedPassword = rs.getString("password");
@@ -85,6 +85,10 @@ public class LoginPage extends JPanel {
             e.printStackTrace();
             // Handle database error
         }
+    }
+
+    public String getAdmissionNumber() {
+        return admissionNumberField.getText();
     }
 
     public static void main(String[] args) {

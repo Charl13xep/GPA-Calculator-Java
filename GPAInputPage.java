@@ -8,9 +8,10 @@ public class GPAInputPage extends JPanel {
 
     // ... (same fields as before)
     private String[] subjectOptions = {
-            "Mathematics", "English", "Physics", "Chemistry", "Biology",
-            "History", "Geography", "Computer Science", "Art", "Music",
-            "Physical Education", "Business Studies", "Foreign Language", "Other" };
+            "Integral Calculus", "Object Oriented Programming 1", "Object Oriented Programming 2",
+            "Computer Organization", "Data Structures",
+            "Differential Calculus", "Ethics", "Management", "Computer Networks", "Operating Systems",
+            "Economics", "Statistics", "Probability", "Discrete" };
 
     private JPanel inputPanel; // Now a class member
     private JButton addSubjectButton, calculateButton;
@@ -20,7 +21,10 @@ public class GPAInputPage extends JPanel {
     private List<JTextField> creditHoursFields = new ArrayList<>(); // Optional
     private GridBagConstraints gbc = new GridBagConstraints();
 
-    public GPAInputPage() {
+    private static String admissionNumber;
+
+    public GPAInputPage(String admissionNumber) {
+        this.admissionNumber = admissionNumber;
 
         setLayout(new BorderLayout(20, 20));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -91,7 +95,7 @@ public class GPAInputPage extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame("GPA Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new GPAInputPage());
+        frame.getContentPane().add(new GPAInputPage(admissionNumber));
 
         // Set preferred size for a wider window
         frame.setPreferredSize(new Dimension(600, 400));
