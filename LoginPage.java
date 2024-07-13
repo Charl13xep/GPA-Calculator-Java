@@ -61,17 +61,6 @@ public class LoginPage extends JPanel {
         gbc.weighty = 1.0;
         add(leftPanel, gbc);
 
-        JLabel admissionNumberLabel = new JLabel("admissionNumber:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        add(admissionNumberLabel, gbc);
-
-        admissionNumberField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        add(admissionNumberField, gbc);
-
         // Right Panel (Form)
         JPanel formPanel = new JPanel(new GridBagLayout());
         gbc.gridx = 1;
@@ -95,14 +84,14 @@ public class LoginPage extends JPanel {
         formGbc.gridwidth = 2;
         formPanel.add(titleLabel, formGbc);
 
-        // Username Label
-        JLabel usernameLabel = new JLabel("Username:");
+        // admissionNumber Label
+        JLabel admissionNumberLabel = new JLabel("admissionNumber:");
         formGbc.gridx = 0;
         formGbc.gridy = 1;
         formGbc.gridwidth = 1; // Reset to one column
-        formPanel.add(usernameLabel, formGbc);
+        formPanel.add(admissionNumberLabel, formGbc);
 
-        // Username Field
+        // admissionNumber Field
         admissionNumberField = new JTextField(20);
         formGbc.gridx = 1;
         formGbc.gridy = 1;
@@ -183,10 +172,6 @@ public class LoginPage extends JPanel {
             e.printStackTrace();
             // Handle database error
         }
-    }
-
-    public String getAdmissionNumber() {
-        return admissionNumberField.getText();
     }
 
     public static void main(String[] args) {
