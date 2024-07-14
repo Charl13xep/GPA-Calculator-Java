@@ -105,6 +105,7 @@ public class RegistrationPage extends JPanel {
 
             try (Connection conn = DriverManager.getConnection(link, dUname, dPass)) {
                 String query = "INSERT INTO users (name1, email, admission_number, password1, faculty) VALUES (?, ?, ?, ?, ?)";
+                String query2 = "INSERT INTO grades (admission_number) VALUES (?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, name);
                     pstmt.setString(2, email);
@@ -121,6 +122,19 @@ public class RegistrationPage extends JPanel {
             } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle database error (e.g., duplicate username)
+            }
+
+            try {
+                Connection conn = DriverManager.getConnection(link, dUname, dPass);
+                String query2 = "INSERT INTO grades (admission_number) VALUES (?)";
+                try (PreparedStatement pstmt2 = conn.prepareStatement(query2)) {
+                    pstmt2.setString(1, admissionNumber);
+                    pstmt2.executeUpdate();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

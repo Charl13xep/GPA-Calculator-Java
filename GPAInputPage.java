@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,17 +15,19 @@ public class GPAInputPage extends JPanel {
     // ... (same fields as before)
     private String[] subjectOptions = {
             "Integral Calculus", "Object Oriented Programming 1", "Object Oriented Programming 2",
-            "Computer Organization", "Data Structures",
-            "Differential Calculus", "Ethics", "Management", "Computer Networks", "Operating Systems",
-            "Economics", "Statistics", "Probability", "Discrete" };
+            "Computer Organization", "Data Structures" };
 
     private JPanel inputPanel; // Now a class member
     private JButton addSubjectButton, calculateButton;
+    private final int DEFAULT_CREDIT_HOURS = 2;
 
     private List<JComboBox<String>> gradeFields = new ArrayList<>();
     private List<JComboBox<String>> subjectFields = new ArrayList<>();
-    private List<JTextField> creditHoursFields = new ArrayList<>(); // Optional
+
     private GridBagConstraints gbc = new GridBagConstraints();
+    private final String link = "jdbc:mysql://localhost:3306/oop";
+    private final String dUname = "root";
+    private final String dPass = "693369";
 
     private static String admissionNumber;
 
@@ -63,7 +69,7 @@ public class GPAInputPage extends JPanel {
         buttonPanel.add(calculateButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        calculateButton.addActionListener(e -> calculateGPA());
+        calculateButton.addActionListener(e -> calculateAndStoreGPA());
 
         // Initial subject row
         addSubjectRow();
@@ -74,11 +80,9 @@ public class GPAInputPage extends JPanel {
         // JTextField subjectField = new JTextField(20); // Set preferred column width
         String[] gradeOptions = { "A", "B", "C", "D", "F" };
         JComboBox<String> gradeField = new JComboBox<>(gradeOptions);
-        JTextField creditHoursField = new JTextField(5); // Set preferred column width for credit hours
 
         subjectFields.add(subjectField);
         gradeFields.add(gradeField);
-        creditHoursFields.add(creditHoursField);
 
         // Set weights for columns to distribute space better
         gbc.weightx = 0.5; // Subject field takes up more horizontal space
@@ -92,18 +96,10 @@ public class GPAInputPage extends JPanel {
         gbc.gridx = 2;
         inputPanel.add(gradeField, gbc);
 
-        // Optional: Add credit hours field
-        if (creditHoursFields.size() > 0) {
-            gbc.gridx = 3;
-            inputPanel.add(new JLabel("Credits:"), gbc);
-            gbc.gridx = 4;
-            inputPanel.add(creditHoursField, gbc);
-        }
-
         revalidate();
     }
 
-    private void calculateGPA() {
+    private void calculateAndStoreGPA() {
         Map<String, Double> gradePoints = new HashMap<>();
         gradePoints.put("A", 4.0);
         gradePoints.put("B", 3.0);
@@ -112,35 +108,48 @@ public class GPAInputPage extends JPanel {
         gradePoints.put("F", 0.0);
 
         double totalWeightedGradePoints = 0;
-        int totalCreditHours = 0;
 
+        try (Connection conn = DriverManager.getConnection(link, dUname, dPass)) {
+            // conn.setAutoCommit(false);
+            String insertQuery = "UPDATE grades SET `Integral_Calculus`=?, `Object_Oriented_Programming_1`=? , `Object_Oriented_Programming_2`  = ?, `Computer_Organization` = ?, `Data_Structures` = ?  WHERE admission_number=? ";
+            try (PreparedStatement pstmt2 = conn.prepareStatement(insertQuery)) {
+                pstmt2.setString(6, admissionNumber);
+                pstmt2.setString(1, gradeFields.get(0).getSelectedItem().toString());
+                pstmt2.setString(2, gradeFields.get(1).getSelectedItem().toString());
+                pstmt2.setString(3, gradeFields.get(2).getSelectedItem().toString());
+                pstmt2.setString(4, gradeFields.get(3).getSelectedItem().toString());
+                pstmt2.setString(5, gradeFields.get(4).getSelectedItem().toString());
+
+                pstmt2.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error saving GPA data.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < subjectFields.size(); i++) {
             String subject = (String) subjectFields.get(i).getSelectedItem();
             String grade = (String) gradeFields.get(i).getSelectedItem();
-            int creditHours;
-            try {
-                creditHours = Integer.parseInt(creditHoursFields.get(i).getText());
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Invalid credit hours for " + subject);
-                return;
-            }
+            int creditHours = DEFAULT_CREDIT_HOURS; // Use default credit hours
 
             if (gradePoints.containsKey(grade)) {
                 totalWeightedGradePoints += gradePoints.get(grade) * creditHours;
-                totalCreditHours += creditHours;
+
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid grade entered for " + subject);
+                JOptionPane.showMessageDialog(this, "Invalid grade entered for subject " + (i + 1));
                 return;
             }
         }
+        double gpa = totalWeightedGradePoints / (DEFAULT_CREDIT_HOURS * subjectFields.size());
 
-        if (totalCreditHours == 0) {
-            JOptionPane.showMessageDialog(this, "Please enter credit hours for at least one subject.");
-            return;
-        }
-
-        double gpa = totalWeightedGradePoints / totalCreditHours;
-        JOptionPane.showMessageDialog(this, String.format("Your GPA is: %.2f", gpa));
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(GPAInputPage.this);
+        mainFrame.getContentPane().removeAll();
+        ResultsPage resultsPage = new ResultsPage(admissionNumber, gpa, mainFrame);
+        mainFrame.getContentPane().add(resultsPage);
+        mainFrame.revalidate();
+        mainFrame.repaint();
     }
 
     // ... (Methods to get data from fields and validate input)
