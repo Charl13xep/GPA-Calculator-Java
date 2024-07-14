@@ -46,7 +46,8 @@ public class GPAInputPage extends JPanel {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    BufferedImage image = ImageIO.read(new File("C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\pexels-ian-panelo-8284884.jpg"));
+                    BufferedImage image = ImageIO.read(new File(
+                            "C:\\Users\\Lenovo\\Desktop\\school\\Programming\\JAVA\\VSCode\\GPA Calculator\\images\\pexels-ian-panelo-8284884.jpg"));
                     g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -62,7 +63,7 @@ public class GPAInputPage extends JPanel {
         backgroundPanel.add(this, BorderLayout.CENTER);
 
         // Make the GPAInputPage panel transparent
-        setOpaque(false);  
+        setOpaque(false);
 
         JLabel titleLabel = new JLabel("GPA Calculator (4.0 Scale)");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -94,7 +95,6 @@ public class GPAInputPage extends JPanel {
         // Initial subject row
         addSubjectRow();
 
-        
     }
 
     private void addSubjectRow() {

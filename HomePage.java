@@ -11,7 +11,7 @@ public class HomePage extends JPanel {
 
         // Load and scale the background image
         ImageIcon imageIcon = new ImageIcon(
-                "C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\pexels-ian-panelo-5491023.jpg");
+                "C:\\Users\\Lenovo\\Desktop\\school\\Programming\\JAVA\\VSCode\\GPA Calculator\\images\\pexels-ian-panelo-5491023.jpg");
         backgroundImage = imageIcon.getImage().getScaledInstance(600, 400, Image.SCALE_SMOOTH);
 
         // Title (white text)
