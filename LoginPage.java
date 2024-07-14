@@ -157,7 +157,8 @@ public class LoginPage extends JPanel {
         registerButton.setBackground(Color.BLACK); // Set background color to black
         registerButton.setForeground(Color.WHITE); // Set text color to white
         registerButton.addActionListener(e -> {
-            // ... (code to switch to registration page)
+            
+            
         });
         buttonPanel.add(registerButton);
 
