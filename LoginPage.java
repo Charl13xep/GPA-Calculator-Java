@@ -37,7 +37,7 @@ public class LoginPage extends JPanel {
                 super.paintComponent(g);
                 try {
                     BufferedImage image = ImageIO.read(new File(
-                            "C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\640074.png"));
+                            "C:\\Users\\Lenovo\\Desktop\\school\\Programming\\JAVA\\VSCode\\GPA Calculator\\images\\640074.png"));
                     // Scale the image to fit the panel while maintaining aspect ratio
                     int imgWidth = image.getWidth();
                     int imgHeight = image.getHeight();
