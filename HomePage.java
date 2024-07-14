@@ -3,55 +3,52 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class HomePage extends JPanel {
+    private Image backgroundImage;
 
     public HomePage() {
-        setLayout(new BorderLayout(20, 40)); // Increased vertical padding
-        setBorder(BorderFactory.createEmptyBorder(50, 80, 50, 80)); // More padding on sides
+        setLayout(new BorderLayout(20, 40));
+        setBorder(BorderFactory.createEmptyBorder(50, 80, 50, 80));
 
-        // Title with larger font and more spacing
+        // Load and scale the background image
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\pexels-ian-panelo-5491023.jpg");
+        backgroundImage = imageIcon.getImage().getScaledInstance(600, 400, Image.SCALE_SMOOTH); 
+
+        // Title (white text)
         JLabel titleLabel = new JLabel("GPA Calculator");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setForeground(Color.WHITE); 
         add(titleLabel, BorderLayout.NORTH);
 
-        // Panel for description and image
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        // Description with custom font and line spacing
+        // Description (white text)
         JLabel descriptionLabel = new JLabel(
-                "<html><div style='text-align: center;font-family: Arial, sans-serif;line-height: 1.5;'>" +
-                        "Calculate and track your GPA with ease.<br/>" +
-                        "Log in to get started." +
-                        "</div></html>");
+            "<html><div style='text-align: center;font-family: Arial, sans-serif;line-height: 1.5; color: white;'>" +
+                    "Calculate and track your GPA with ease.<br/>" +
+                    "Log in to get started." +
+                    "</div></html>");
         descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        centerPanel.add(descriptionLabel, gbc);
+        add(descriptionLabel, BorderLayout.CENTER); // Add directly to main panel
 
-        // Add an image (replace 'path/to/your/image.png' with your actual image path)
-        ImageIcon imageIcon = new ImageIcon("path/to/your/image.png");
-        Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(20, 10, 10, 10); // Add more top margin to the image
-        centerPanel.add(imageLabel, gbc);
-        add(centerPanel, BorderLayout.CENTER);
-
-        // Login button with larger size and padding
+        // Login button (white text)
         JButton loginButton = new JButton("Login");
-        loginButton.setPreferredSize(new Dimension(150, 40)); // Make button bigger
+        loginButton.setPreferredSize(new Dimension(150, 40)); 
         loginButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        loginButton.setForeground(Color.WHITE); 
         loginButton.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(HomePage.this);
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new LoginPage());
+            frame.getContentPane().add(new LoginPage()); 
             frame.revalidate();
             frame.repaint();
         });
         add(loginButton, BorderLayout.SOUTH);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the background image to cover the entire panel
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
     public static void main(String[] args) {
