@@ -21,13 +21,7 @@ public class ResultsPage extends JPanel {
             "Computer Organization", "Data Structures" };
 
     public ResultsPage(String admissionNumber, double calculatedGPA, JFrame mainFrame) {
-        JFrame frame = new JFrame("GPA Calculator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(this);
-        frame.setPreferredSize(new Dimension(600, 400));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+
         setLayout(new BorderLayout());
 
         try {
@@ -96,6 +90,7 @@ public class ResultsPage extends JPanel {
                     e.printStackTrace();
                     tableModel.addRow(new Object[] { subject, "N/A" });
                 }
+
             }
             table = new JTable(tableModel);
             table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -120,9 +115,4 @@ public class ResultsPage extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
-        // Create a new ResultsPage
-        SwingUtilities.invokeLater(() -> new ResultsPage("1111", 3.5, new JFrame()));
-
-    }
 }

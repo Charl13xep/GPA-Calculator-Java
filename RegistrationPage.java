@@ -215,9 +215,8 @@ public class RegistrationPage extends JPanel {
         return pattern.matcher(email).matches();
     }
 
-    // Password validation (at least 8 characters, letters, and numbers)
     private boolean isValidPassword(String password) {
-        String passwordRegex = "^(?=.[A-Za-z])(?=.\\d)[A-Za-z\\d]{8,}$";
+        String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"; // Remove the dots within the lookaheads
         Pattern pattern = Pattern.compile(passwordRegex);
         return pattern.matcher(password).matches();
     }

@@ -33,6 +33,7 @@ public class GPAInputPage extends JPanel {
     private static String admissionNumber;
 
     public GPAInputPage(String admissionNumber) {
+        this.admissionNumber = admissionNumber;
         JFrame frame = new JFrame("GPA Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(600, 400));
@@ -145,35 +146,37 @@ public class GPAInputPage extends JPanel {
                 pstmt2.setString(5, gradeFields.get(4).getSelectedItem().toString());
 
                 pstmt2.executeUpdate();
+
+                for (int i = 0; i < subjectFields.size(); i++) {
+                    String subject = (String) subjectFields.get(i).getSelectedItem();
+                    String grade = (String) gradeFields.get(i).getSelectedItem();
+                    int creditHours = DEFAULT_CREDIT_HOURS; // Use default credit hours
+
+                    if (gradePoints.containsKey(grade)) {
+                        totalWeightedGradePoints += gradePoints.get(grade) * creditHours;
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Invalid grade entered for subject " + (i + 1));
+                        return;
+                    }
+                }
+                double gpa = totalWeightedGradePoints / (DEFAULT_CREDIT_HOURS * subjectFields.size());
+                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(GPAInputPage.this);
+                mainFrame.getContentPane().removeAll();
+                ResultsPage resultsPage = new ResultsPage(admissionNumber, gpa, mainFrame);
+                mainFrame.getContentPane().add(resultsPage);
+                mainFrame.revalidate();
+                mainFrame.repaint();
+
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error saving GPA data.");
+                JOptionPane.showMessageDialog(this, "Error saving GPA data. Try again");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < subjectFields.size(); i++) {
-            String subject = (String) subjectFields.get(i).getSelectedItem();
-            String grade = (String) gradeFields.get(i).getSelectedItem();
-            int creditHours = DEFAULT_CREDIT_HOURS; // Use default credit hours
 
-            if (gradePoints.containsKey(grade)) {
-                totalWeightedGradePoints += gradePoints.get(grade) * creditHours;
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid grade entered for subject " + (i + 1));
-                return;
-            }
-        }
-        double gpa = totalWeightedGradePoints / (DEFAULT_CREDIT_HOURS * subjectFields.size());
-
-        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(GPAInputPage.this);
-        mainFrame.getContentPane().removeAll();
-        ResultsPage resultsPage = new ResultsPage(admissionNumber, gpa, mainFrame);
-        mainFrame.getContentPane().add(resultsPage);
-        mainFrame.revalidate();
-        mainFrame.repaint();
     }
 
     // ... (Methods to get data from fields and validate input)
