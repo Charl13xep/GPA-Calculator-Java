@@ -30,7 +30,6 @@ public class LoginPage extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         setBackground(Color.BLACK);
 
-
         // Left Panel (Image)
         JPanel leftPanel = new JPanel() {
             @Override
@@ -167,6 +166,11 @@ public class LoginPage extends JPanel {
         errorLabel.setForeground(Color.WHITE); // Set text color to white
         formGbc.gridy = 6;
         formPanel.add(errorLabel, formGbc);
+
+        registerButton.addActionListener(e -> {
+            SwingUtilities.getWindowAncestor(this).dispose();
+            new RegistrationPage();
+        });
 
     }
 
