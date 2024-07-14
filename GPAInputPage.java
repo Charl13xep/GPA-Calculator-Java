@@ -1,14 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 
 public class GPAInputPage extends JPanel {
 
@@ -34,20 +35,38 @@ public class GPAInputPage extends JPanel {
     public GPAInputPage(String admissionNumber) {
         JFrame frame = new JFrame("GPA Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(this);
-
-        // Set preferred size for a wider window
         frame.setPreferredSize(new Dimension(600, 400));
         frame.pack();
-        frame.setLocationRelativeTo(null); // Center the window
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        this.admissionNumber = admissionNumber;
 
-        setLayout(new BorderLayout(20, 20));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // Background Image Panel
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    BufferedImage image = ImageIO.read(new File("C:\\Users\\shawn\\OneDrive\\Desktop\\.vscode\\GPA-Calculator-Java\\images\\pexels-ian-panelo-8284884.jpg"));
+                    g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        frame.setContentPane(backgroundPanel);
+
+        // Layout for content on top of background
+        backgroundPanel.setLayout(new BorderLayout(20, 20));
+        backgroundPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        backgroundPanel.setOpaque(false);
+        backgroundPanel.add(this, BorderLayout.CENTER);
+
+        // Make the GPAInputPage panel transparent
+        setOpaque(false);  
 
         JLabel titleLabel = new JLabel("GPA Calculator (4.0 Scale)");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
@@ -55,10 +74,11 @@ public class GPAInputPage extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
         add(inputPanel, BorderLayout.CENTER);
+        inputPanel.setOpaque(false);
 
         addSubjectButton = new JButton("Add Subject");
         addSubjectButton.addActionListener(e -> addSubjectRow());
-        addSubjectButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        addSubjectButton.setFont(new Font("Arial", Font.BOLD, 16));
 
         calculateButton = new JButton("Calculate GPA");
         // Add action listener to calculateButton to process data
@@ -73,6 +93,8 @@ public class GPAInputPage extends JPanel {
 
         // Initial subject row
         addSubjectRow();
+
+        
     }
 
     private void addSubjectRow() {
@@ -88,7 +110,9 @@ public class GPAInputPage extends JPanel {
         gbc.weightx = 0.5; // Subject field takes up more horizontal space
         gbc.gridx = 0;
         gbc.gridy = inputPanel.getComponentCount() / 3;
-        inputPanel.add(new JLabel("Subject:"), gbc);
+        JLabel subjectLabel = new JLabel("Subject:");
+        subjectLabel.setForeground(Color.WHITE);
+        inputPanel.add(subjectLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(subjectField, gbc);
 
