@@ -35,6 +35,7 @@ public class HomePage extends JPanel {
         JButton loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(150, 40));
         loginButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        loginButton.setBackground(Color.BLACK);
         loginButton.setForeground(Color.WHITE);
         loginButton.addActionListener(e -> {
             SwingUtilities.getWindowAncestor(this).dispose();
