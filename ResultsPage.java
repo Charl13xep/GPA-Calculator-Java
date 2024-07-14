@@ -20,20 +20,10 @@ public class ResultsPage extends JPanel {
 
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Remove the ResultsPage
-                mainFrame.getContentPane().removeAll();
-
-                // Add your GPAInputPage (or other relevant page) back to the frame
-                GPAInputPage gpaInputPage = new GPAInputPage(admissionNumber);
-                mainFrame.getContentPane().add(gpaInputPage);
-
-                mainFrame.revalidate(); // Refresh the layout
-                mainFrame.repaint(); // Repaint the component
-            }
+        backButton.addActionListener(e -> {
+            // Remove the ResultsPage
+            SwingUtilities.getWindowAncestor(this).dispose();
+            new GPAInputPage(admissionNumber);
         });
 
         // Panel for button alignment
