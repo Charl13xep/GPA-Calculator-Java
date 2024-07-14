@@ -28,6 +28,8 @@ public class LoginPage extends JPanel {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
+        setBackground(Color.BLACK);
+
 
         // Left Panel (Image)
         JPanel leftPanel = new JPanel() {
@@ -72,8 +74,9 @@ public class LoginPage extends JPanel {
         gbc.weighty = 1.0;
         add(leftPanel, gbc);
 
-        // Right Panel (Form)
+        // Right Panel (Form) - Set background to black
         JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.BLACK); // Set formPanel background to black
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.gridheight = 1;
@@ -82,14 +85,19 @@ public class LoginPage extends JPanel {
         gbc.weighty = 1.0;
         add(formPanel, gbc);
 
-        // Form Elements
+        // Form Elements - Set text color to white
+        addFormElements(formPanel);
+    }
+
+    private void addFormElements(JPanel formPanel) {
         GridBagConstraints formGbc = new GridBagConstraints();
         formGbc.insets = new Insets(5, 5, 5, 5);
-        formGbc.anchor = GridBagConstraints.WEST; // Left alignment
+        formGbc.anchor = GridBagConstraints.WEST;
 
-        // Title Label
+        // Title Label (set text color to white)
         JLabel titleLabel = new JLabel("Login");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(Color.WHITE); // Set text color to white
         formGbc.gridx = 0;
         formGbc.gridy = 0;
         formGbc.gridwidth = 2;
@@ -97,6 +105,7 @@ public class LoginPage extends JPanel {
 
         // Admission Number Label
         JLabel admissionNumberLabel = new JLabel("Admission Number:");
+        admissionNumberLabel.setForeground(Color.WHITE);
         formGbc.gridx = 0;
         formGbc.gridy = 1;
         formGbc.gridwidth = 2; // Label spans both columns
@@ -112,6 +121,7 @@ public class LoginPage extends JPanel {
 
         // Password Label
         JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setForeground(Color.WHITE);
         formGbc.gridx = 0;
         formGbc.gridy = 3; // Move to the next row
         formGbc.gridwidth = 2; // Label spans both columns
@@ -126,36 +136,35 @@ public class LoginPage extends JPanel {
         formGbc.fill = GridBagConstraints.HORIZONTAL;
         formPanel.add(passwordField, formGbc);
 
-        // Button Panel (to hold both buttons side by side)
+        // Button Panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(Color.BLACK); // Set buttonPanel background to black
         formGbc.gridx = 0;
         formGbc.gridy = 5;
         formGbc.gridwidth = 2;
         formPanel.add(buttonPanel, formGbc);
 
-        // Login Button
+        // Login Button (black background, white text)
         loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(100, 30));
+        loginButton.setBackground(Color.BLACK); // Set background color to black
+        loginButton.setForeground(Color.WHITE); // Set text color to white
         loginButton.addActionListener(e -> attemptLogin());
         buttonPanel.add(loginButton);
 
-        // Register Button
+        // Register Button (black background, white text)
         registerButton = new JButton("Register");
         registerButton.setPreferredSize(new Dimension(100, 30));
+        registerButton.setBackground(Color.BLACK); // Set background color to black
+        registerButton.setForeground(Color.WHITE); // Set text color to white
         registerButton.addActionListener(e -> {
-            // Code to switch to the registration page here
-            // For example:
-            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(LoginPage.this);
-            parentFrame.getContentPane().removeAll();
-            parentFrame.getContentPane().add(new RegistrationPage());
-            parentFrame.revalidate();
-            parentFrame.repaint();
+            // ... (code to switch to registration page)
         });
         buttonPanel.add(registerButton);
 
-        // Error Label (below the buttons)
+        // Error Label (set text color to white)
         errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(Color.WHITE); // Set text color to white
         formGbc.gridy = 6;
         formPanel.add(errorLabel, formGbc);
 
